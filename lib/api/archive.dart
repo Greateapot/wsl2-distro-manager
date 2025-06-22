@@ -41,23 +41,15 @@ class ArchiveApi {
         final bytes = await file.readAsBytes();
         final length = bytes.length;
 
-        // Last layer
+        // write last layer (with trailing zeros)
         if (i == archivePaths.length - 1) {
-          await outputFile.writeAsBytes(bytes);
+          await outputFile.writeAsBytes(bytes, mode: FileMode.append);
           break;
         }
 
-        // Remove trailing zeros
-        int lastBytePos = 0;
-        for (var i = length - 1; i >= 0; i--) {
-          if (bytes[i] != 0) {
-            lastBytePos = i;
-            break;
-          }
-        }
-
-        // Write to new file
-        await outputFile.writeAsBytes(bytes.sublist(0, lastBytePos + 1));
+        // Write or append to new file (without trailing zeros)
+        await outputFile.writeAsBytes(bytes.sublist(0, length - 1024),
+            mode: i == 0 ? FileMode.write : FileMode.append);
       }
     } catch (e) {
       throw Exception('Failed to merge archives: $e');

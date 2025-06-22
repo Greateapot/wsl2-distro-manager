@@ -443,10 +443,10 @@ class DockerImage {
           for (var i = 0; i < layers; i++) {
             // Read archives layers
             if (kDebugMode) {
-              print('Extracting layer $i of $layers');
+              print('Extracting layer ${i + 1} of $layers');
             }
             // progress(i, layers, -1, -1);
-            Notify.message('Extracting layer $i of $layers');
+            Notify.message('Extracting layer ${i + 1} of $layers');
 
             // Extract layer
             final layerTarGz = parentPath.file('layer_$i.tar.gz');
